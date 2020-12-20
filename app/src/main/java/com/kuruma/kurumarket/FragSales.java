@@ -144,12 +144,7 @@ public class FragSales extends Fragment {
                     }
                 });
 
-
                 dialogadd.show();
-
-
-
-
             }
         });
 
