@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "173173220088",
+    "project_id": "kurumarket-f4a15",
+    "storage_bucket": "kurumarket-f4a15.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:173173220088:android:b9d3e76de550c5dca3510d",
+        "android_client_info": {
+          "package_name": "com.kuruma.kurumarket"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "173173220088-7ogdola4hjtg6ebopam38nc2fj2sa4u9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kuruma.kurumarket",
+            "certificate_hash": "8042985c954c61b1638602192412b77a4d73d28c"
+          }
+        },
+        {
+          "client_id": "173173220088-vtnscu82c26pn6snq0inc9lmuq8h1inv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDP4wMbSyq_5eoWR0hrTmK-KaH9axf3BgU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "173173220088-vtnscu82c26pn6snq0inc9lmuq8h1inv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
