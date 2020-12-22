@@ -3,6 +3,7 @@ package com.kuruma.kurumarket;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -34,6 +37,8 @@ public class FragSales extends Fragment {
     private Button btn_add; //아이템 추가 버튼
     private DatabaseReference databaseReference; //파이어베이스 데이터베이스
 
+    private InterstitialAd mInterstitialAd; //전면 광고 객체
+
     public static FragSales newInstance(){
         FragSales fragSales = new FragSales();
         return fragSales;
@@ -46,6 +51,13 @@ public class FragSales extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
        //Activity 안에 fragment를 inflater는 붙이는 개념
         view = inflater.inflate(R.layout.frag_sales, container, false);
+
+        //전면광고
+        mInterstitialAd = new InterstitialAd(getContext()); // Activity가 아니여서
+        //Sample AdMob Id ca-app-pub-3940256099942544/1033173712
+        //Realease AdMob Id ca-app-pub-6754052115866718/1119618741
+        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
 
         btn_add = view.findViewById(R.id.btn_add);
         recyclerView = view.findViewById(R.id.rv_sales); //id 연동
@@ -109,6 +121,13 @@ public class FragSales extends Fragment {
         btn_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                //광고 게재
+                if (mInterstitialAd.isLoaded()) {
+                    mInterstitialAd.show();
+                } else {
+                    Log.d("TAG", "The interstitial wasn't loaded yet.");
+                }
 
 
                 final Dialog dialogadd = new Dialog(getContext(), R.style.Theme_AppCompat_Light_Dialog_Alert);

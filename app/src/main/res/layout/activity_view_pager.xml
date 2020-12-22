@@ -57,6 +57,8 @@
         <!--            app:layout_constraintTop_toTopOf="parent" />-->
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <!-- Sample Admob Id ca-app-pub-3940256099942544/6300978111-->
+    <!-- Release Admob Id ca-app-pub-6754052115866718/4998319854-->
     <com.google.android.gms.ads.AdView
         android:id="@+id/adbanner"
         android:layout_width="0dp"
