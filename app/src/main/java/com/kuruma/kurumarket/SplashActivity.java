@@ -17,7 +17,7 @@ public class SplashActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intent = new Intent(SplashActivity.this, ViewPagerActivity.class);
+                Intent intent = new Intent(SplashActivity.this, SignupActivity.class);
                 startActivity(intent);
                 finish(); // 현재 엑티비티를 파괴시킴.
             }

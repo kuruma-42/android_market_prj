@@ -2,18 +2,17 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.kuruma.kurumarket">
 
-    <!-- 디바이스의 현 상태 체크하는 권한 -->
-    <!-- <uses-permission android:name="android.permission.READ_PHONE_STATE"/> -->
-
     <application
-        android:allowBackup="true"
         android:name=".CustomApplication"
+        android:allowBackup="true"
         android:icon="@drawable/kurumafox"
         android:label="@string/app_name"
         android:roundIcon="@drawable/kurumafox"
         android:supportsRtl="true"
-        android:theme="@style/Theme.KuruMarket">
-        <activity android:name=".ViewPagerActivity"></activity>
+        android:theme="@style/Theme.Design.Light"
+        >
+        <activity android:name=".SignupActivity"></activity>
+        <activity android:name=".ViewPagerActivity" />
         <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,16 +26,13 @@
 
         <service android:name=".FirebaseMessagingService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
-        </service>
-
-        <!-- Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713 -->
+        </service> <!-- Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713 -->
         <!-- Release AdMob app ID: ca-app-pub-6754052115866718~2762220518 -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-3940256099942544~3347511713"/>
-
+            android:value="ca-app-pub-3940256099942544~3347511713" />
     </application>
 
 </manifest>

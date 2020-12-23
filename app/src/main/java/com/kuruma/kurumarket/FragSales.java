@@ -56,7 +56,7 @@ public class FragSales extends Fragment {
         mInterstitialAd = new InterstitialAd(getContext()); // Activity가 아니여서
         //Sample AdMob Id ca-app-pub-3940256099942544/1033173712
         //Realease AdMob Id ca-app-pub-6754052115866718/1119618741
-        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        mInterstitialAd.setAdUnitId("Sample AdMob Id ca-app-pub-3940256099942544/1033173712");
         mInterstitialAd.loadAd(new AdRequest.Builder().build());
 
         btn_add = view.findViewById(R.id.btn_add);
