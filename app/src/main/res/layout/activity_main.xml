@@ -5,60 +5,68 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
-    tools:context=".MainActivity">
+    tools:context=".SplashActivity">
+
+    <ImageView
+        android:id="@+id/iv_foxmain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/fox_main" />
 
     <TextView
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
-        android:text="KuruMarket"
+        android:text="쿠루마켓"
         android:textColor="#000000"
         android:textSize="24sp"
         android:textStyle="bold"
-        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/iv_foxmain"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="visible" />
+        app:layout_constraintVertical_bias="1.0" />
 
     <Button
-        android:id="@+id/btn_buy"
+        android:id="@+id/btn_redirectlogin"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginRight="32dp"
-        android:text="구매하기"
-        app:backgroundTint="#3F51B5"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="32dp"
+        android:background="#448AFF"
+        android:text="로그인"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btn_redirectsignup"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/iv_pofile" />
+        app:layout_constraintTop_toBottomOf="@+id/iv_foxmain" />
 
-    <EditText
-        android:id="@+id/et_name"
+    <Button
+        android:id="@+id/btn_redirectsignup"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:ems="10"
-        android:hint="이름을 입력하세요"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="@+id/btn_buy"
-        app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintStart_toStartOf="@+id/btn_buy"
-        app:layout_constraintTop_toBottomOf="@+id/btn_buy" />
-
-    <ImageView
-        android:id="@+id/iv_pofile"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="32dp"
+        android:background="#92FF40C9"
+        android:text="회원가입"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_title"
-        app:srcCompat="@drawable/cart" />
-
+        app:layout_constraintStart_toEndOf="@+id/btn_redirectlogin"
+        app:layout_constraintTop_toBottomOf="@+id/iv_foxmain" />
 </androidx.constraintlayout.widget.ConstraintLayout>
