@@ -22,6 +22,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText et_loginid;
     private EditText et_loginpw;
     private Button btn_login;
+    private Button btn_reset_password;
 
     private static final String TAG = "SignupActivity";
     private FirebaseAuth mAuth;
@@ -38,11 +39,25 @@ public class LoginActivity extends AppCompatActivity {
         et_loginid = (EditText)findViewById(R.id.et_loginid);
         et_loginpw = (EditText)findViewById(R.id.et_loginpw);
         btn_login = (Button)findViewById(R.id.btn_login);
+        btn_reset_password  = (Button)findViewById(R.id.btn_reset_password);
+
 
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startLogin();
+                if(et_loginid.getText().toString().length() > 0 && et_loginpw.getText().toString().length() > 0){
+                    startLogin();
+                }else{
+                    startToast("이메일 혹은 비밀번호를 입력하세요.");
+                    return;
+                }
+            }
+        });
+
+        btn_reset_password.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myStartActivity(PasswordResetActivity.class);
             }
         });
     }
@@ -60,11 +75,10 @@ public class LoginActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+                            startToast("로그인에 성공하였습니다.");
+                            myStartActivity(WelcomeActivity.class);
 
-                            //Redirect to ViewPager Activity
-                            Intent intent = new Intent(LoginActivity.this, ViewPagerActivity.class);
-                            startActivity(intent);
-                            finish();
+
 
                         } else {
                             // If sign in fails, display a message to the user.
@@ -78,4 +92,13 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
     }
+
+    private void myStartActivity(Class c){
+        Intent intent = new Intent(LoginActivity.this, c);
+        intent.addFlags(intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+    }
+
+    private void startToast(String msg){ Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();}
+
 }

@@ -19,7 +19,7 @@
         app:layout_constraintVertical_bias="0.498">
 
         <Button
-            android:id="@+id/btn_login"
+            android:id="@+id/btn_send_email"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
@@ -82,7 +82,7 @@
             android:hint="비밀번호 확인"
             android:inputType="textPassword"
             android:textColor="#000000"
-            app:layout_constraintBottom_toTopOf="@+id/btn_login"
+            app:layout_constraintBottom_toTopOf="@+id/btn_send_email"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/et_loginpw" />
@@ -90,7 +90,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ImageView
-        android:id="@+id/iv_login"
+        android:id="@+id/iv_password_reset"
         android:layout_width="154dp"
         android:layout_height="133dp"
         android:layout_marginStart="128dp"

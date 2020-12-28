@@ -12,7 +12,8 @@
         android:roundIcon="@drawable/kurumafox"
         android:supportsRtl="true"
         android:theme="@style/Theme.Design.Light">
-        <activity android:name=".LoginActivity"/>
+        <activity android:name=".WelcomeActivity"></activity>
+        <activity android:name=".LoginActivity" />
         <activity android:name=".SignupActivity" />
         <activity android:name=".ViewPagerActivity" />
         <activity android:name=".SplashActivity">
@@ -22,7 +23,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ConstActivity" />
+        <activity android:name=".PasswordResetActivity" />
+        <activity android:name=".MemberInitActivity" />
         <activity android:name=".HistoryActivity" />
         <activity android:name=".MainActivity" />
 

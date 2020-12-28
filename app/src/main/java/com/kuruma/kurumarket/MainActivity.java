@@ -35,23 +35,25 @@ public class MainActivity extends AppCompatActivity {
         btn_redirectlogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Redirect to Login Activity
-                Intent intent = new Intent(MainActivity.this , LoginActivity.class);
-                startActivity(intent);
-                finish();
+                myStartActivity(LoginActivity.class);
             }
         });
 
         btn_redirectsignup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Redirect to Signup Activity
-                Intent intent = new Intent(MainActivity.this , SignupActivity.class);
-                startActivity(intent);
-                finish();
+                myStartActivity(SignupActivity.class);
             }
         });
 
+
     }
+    private void myStartActivity(Class c){
+        Intent intent = new Intent(this, c);
+        intent.addFlags(intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+    }
+
+
 
 }

@@ -1,27 +1,49 @@
 package com.kuruma.kurumarket;
 
 public class MemberInfo {
-    private String tv_email;
-    private String tv_loginpassword;
 
-    public MemberInfo(){
+    private String name;
+    private String phone;
+    private String birthdate;
+    private String address;
 
+    public MemberInfo(String name, String phone, String birthdate, String address){
+        this.name = name;
+        this.phone = phone;
+        this.birthdate = birthdate;
+        this.address = address;
     }
 
-    public String getTv_email() {
-        return tv_email;
+    public String getName() {
+        return name;
     }
 
-    public void setTv_email(String tv_email) {
-        this.tv_email = tv_email;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getTv_loginpassword() {
-        return tv_loginpassword;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setTv_loginpassword(String tv_loginpassword) {
-        this.tv_loginpassword = tv_loginpassword;
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getBirthdate() {
+        return birthdate;
+    }
+
+    public void setBirthdate(String birthdate) {
+        this.birthdate = birthdate;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }
 
