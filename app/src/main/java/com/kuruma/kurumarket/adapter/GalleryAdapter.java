@@ -40,22 +40,24 @@ public class GalleryAdapter  extends RecyclerView.Adapter<GalleryAdapter.Gallery
     @Override
     public GalleryAdapter.GalleryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         CardView cardView = (CardView) LayoutInflater.from(parent.getContext()).inflate(R.layout.item_gallery, parent, false);
-        return new GalleryViewHolder(cardView);
+
+        final GalleryViewHolder galleryViewHolder = new GalleryViewHolder(cardView);
+        cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra("profilePath", mDataset.get(galleryViewHolder.getAdapterPosition()));
+                activity.setResult(Activity.RESULT_OK, resultIntent);
+                activity.finish();
+            }
+        });
+        return galleryViewHolder;
     }
 
 
     @Override
     public void onBindViewHolder(@NonNull final GalleryViewHolder holder, int position) {
         CardView cardView = holder.cardView;
-        cardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent resultIntent = new Intent();
-                resultIntent.putExtra("profilePath", mDataset.get(holder.getAdapterPosition()));
-                activity.setResult(Activity.RESULT_OK, resultIntent);
-                activity.finish();
-            }
-        });
 
         ImageView iv_gallery = cardView.findViewById(R.id.iv_gallery);
         Glide.with(activity).load(mDataset.get(position)).centerCrop().override(500).into(iv_gallery);
@@ -67,44 +69,3 @@ public class GalleryAdapter  extends RecyclerView.Adapter<GalleryAdapter.Gallery
         return mDataset.size();
     }
 }
-
-//public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.MyViewHolder> {
-//    private String[] mDataset;
-//
-//    public static class MyViewHolder extends RecyclerView.ViewHolder {
-//        // each data item is just a string in this case
-//        public CardView cardView;
-//        public MyViewHolder(CardView v) {
-//            super(v);
-//            cardView = v;
-//        }
-//    }
-//
-//    public GalleryAdapter(String[] myDataset) {
-//        mDataset = myDataset;
-//    }
-//
-//
-//    @Override
-//    public GalleryAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent,int viewType) {
-//        // create a new view
-//        CardView v = (CardView) LayoutInflater.from(parent.getContext()).inflate(R.layout.item_gallery, parent, false);
-//            //...
-//        MyViewHolder vh = new MyViewHolder(v);
-//        return vh;
-//    }
-//
-//
-//    @Override
-//    public void onBindViewHolder(MyViewHolder holder, int position) {
-//        TextView textView = holder.cardView.findViewById(R.id.tv_gallery);
-//        textView.setText(mDataset[position]);
-//
-//    }
-//
-//
-//    @Override
-//    public int getItemCount() {
-//        return mDataset.length;
-//    }
-//}

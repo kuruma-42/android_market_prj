@@ -33,6 +33,8 @@
         <activity android:name=".activity.CameraActivity" />
         <activity android:name=".activity.PasswordResetActivity" />
         <activity android:name=".activity.MemberInitActivity" />
+        <activity android:name=".activity.WritePostActivity" />
+        <activity android:name=".activity.BasicActivity" />
         <activity android:name=".activity.MainActivity" />
 
         <service android:name=".FirebaseMessagingService">

@@ -16,7 +16,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.kuruma.kurumarket.R;
 
-public class PasswordResetActivity extends AppCompatActivity {
+public class PasswordResetActivity extends BasicActivity {
 
     private Button btn_send_email;
 

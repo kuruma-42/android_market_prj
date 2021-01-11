@@ -18,7 +18,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.kuruma.kurumarket.R;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends BasicActivity {
 
     private EditText et_loginid;
     private EditText et_loginpw;

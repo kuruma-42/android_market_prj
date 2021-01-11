@@ -21,6 +21,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -40,7 +41,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
-public class MemberInitActivity extends AppCompatActivity {
+public class MemberInitActivity extends BasicActivity {
 
     private static final String TAG = "MemberInitActivity";
     private EditText et_name;
@@ -178,8 +179,7 @@ public class MemberInitActivity extends AppCompatActivity {
             case 0 :{
                 if(resultCode == Activity.RESULT_OK){
                     profilePath= data.getStringExtra("profilePath");
-                    Bitmap bmp = BitmapFactory.decodeFile(profilePath);
-                    iv_profile.setImageBitmap(bmp);
+                    Glide.with(this).load(profilePath).centerCrop().override(500).into(iv_profile);
                 }
                 break;
 

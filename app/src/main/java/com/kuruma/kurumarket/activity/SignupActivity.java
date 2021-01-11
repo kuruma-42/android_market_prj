@@ -24,7 +24,7 @@ import com.kuruma.kurumarket.R;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
-public class SignupActivity extends AppCompatActivity {
+public class SignupActivity extends BasicActivity {
 
     private ArrayList<MemberInfo> arrayList;
     private DatabaseReference databaseReference; //파이어베이스 데이터베이스
