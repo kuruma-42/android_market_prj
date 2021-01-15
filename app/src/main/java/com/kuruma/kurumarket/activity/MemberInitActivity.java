@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -54,8 +55,7 @@ public class MemberInitActivity extends BasicActivity {
     private ImageView iv_profile;
     private String profilePath;
     private FirebaseUser user;
-
-
+    private RelativeLayout loaderLayout;
 
 
 
@@ -65,6 +65,7 @@ public class MemberInitActivity extends BasicActivity {
         setContentView(R.layout.activity_member_init);
 
 
+        loaderLayout = findViewById(R.id.loaderLayout);
         et_name = (EditText)findViewById(R.id.et_name);
         et_phone = (EditText)findViewById(R.id.et_phone);
         et_birthdate = (EditText)findViewById(R.id.et_birthdate);
@@ -77,20 +78,7 @@ public class MemberInitActivity extends BasicActivity {
             public void onClick(View v) {
                 switch (v.getId()) {
                     case R.id.btn_gallery:
-                        if (ContextCompat.checkSelfPermission(MemberInitActivity.this,
-                                Manifest.permission.READ_EXTERNAL_STORAGE)
-                                != PackageManager.PERMISSION_GRANTED) {
-                            ActivityCompat.requestPermissions(MemberInitActivity.this,
-                                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                                    1);
-                            if (ActivityCompat.shouldShowRequestPermissionRationale(MemberInitActivity.this,
-                                    Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                            } else {
-                                startToast("권한을 허용해 주세요");
-                            }
-                        }else{
-                            myStartActivity(GalleryActivity.class);
-                        }
+                        myStartActivity(GalleryActivity.class);
                         break;
                 }
 
@@ -119,7 +107,7 @@ public class MemberInitActivity extends BasicActivity {
             public void onClick(View v) {
                 switch (v.getId()){
                     case R.id.btn_confirm_init:
-                        profileUpdate();
+                        storageUploader();
                         break;
                     case R.id.iv_profile:
                         ConstraintLayout constraintLayout = findViewById(R.id.cl_gallerytakepicture);
@@ -135,12 +123,6 @@ public class MemberInitActivity extends BasicActivity {
             }
         });
 
-
-
-
-
-
-
         btn_confirm_init = (Button)findViewById(R.id.btn_confirm_init);
 
 
@@ -149,7 +131,7 @@ public class MemberInitActivity extends BasicActivity {
             public void onClick(View v) {
                 switch (v.getId()){
                     case R.id.btn_confirm_init:
-                        profileUpdate();
+                        storageUploader();
                         break;
                 }
             }
@@ -158,18 +140,6 @@ public class MemberInitActivity extends BasicActivity {
 
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case 1: {
-                if (grantResults.length > 0  && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    myStartActivity(GalleryActivity.class);
-                } else {
-                    startToast("권한을 허용해 주세요");
-                }
-            }
-        }
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -188,8 +158,7 @@ public class MemberInitActivity extends BasicActivity {
         }
     }
 
-    private void profileUpdate(){
-
+    private void storageUploader(){
         final String name = et_name.getText().toString();
         final String phone = et_phone.getText().toString();
         final String birthdate = et_birthdate.getText().toString();
@@ -197,6 +166,7 @@ public class MemberInitActivity extends BasicActivity {
 
         if(name.length() > 0 && phone.length() > 9 && birthdate.length() > 5 && address.length() > 0)
         {
+            loaderLayout.setVisibility(View.VISIBLE);
             user = FirebaseAuth.getInstance().getCurrentUser();
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageRef = storage.getReference();
@@ -204,7 +174,7 @@ public class MemberInitActivity extends BasicActivity {
 
             if(profilePath == null){
                 MemberInfo memberInfo = new MemberInfo(name, phone, birthdate, address);
-                uploader(memberInfo);
+                storeUploader(memberInfo);
             } else{
                 try{
                     InputStream stream = new FileInputStream(new File(profilePath));
@@ -226,7 +196,7 @@ public class MemberInitActivity extends BasicActivity {
                                 Uri downloadUri = task.getResult();
 
                                 MemberInfo memberInfo = new MemberInfo(name, phone, birthdate, address, downloadUri.toString());
-                                uploader(memberInfo);
+                                storeUploader(memberInfo);
 
                             } else {
                                 Log.e("로그", "실패");
@@ -244,7 +214,7 @@ public class MemberInitActivity extends BasicActivity {
 
     }
 
-    private void uploader(MemberInfo memberInfo){
+    private void storeUploader(MemberInfo memberInfo){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         db.collection("users").document(user.getUid()).set(memberInfo)
@@ -252,6 +222,7 @@ public class MemberInitActivity extends BasicActivity {
                     @Override
                     public void onSuccess(Void aVoid) {
                         startToast("회원정보 등록을 성공하였습니다.");
+                        loaderLayout.setVisibility(View.GONE);
                         finish();
                     }
                 })
@@ -259,6 +230,7 @@ public class MemberInitActivity extends BasicActivity {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         startToast("회원정보 등록에 실패하였습니다.");
+                        loaderLayout.setVisibility(View.GONE);
                         Log.w(TAG, "Error writing document", e);
                     }
                 });

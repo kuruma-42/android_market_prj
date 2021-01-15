@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -116,17 +117,23 @@ public class SignupActivity extends BasicActivity {
 
         String email = ((EditText)findViewById(R.id.et_loginid)).getText().toString();
         String password = ((EditText)findViewById(R.id.et_loginpw)).getText().toString();
+        String passwordCheck = ((EditText)findViewById(R.id.et_loginpasswordcheck)).getText().toString();
+
+        final RelativeLayout loaderLayout = findViewById(R.id.loaderLayout);
+        loaderLayout.setVisibility(View.VISIBLE);
 
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            loaderLayout.setVisibility(View.GONE);
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             //성공했을 때 로직
                         } else {
+                            loaderLayout.setVisibility(View.GONE);
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
                             //실패했을 때 로직
