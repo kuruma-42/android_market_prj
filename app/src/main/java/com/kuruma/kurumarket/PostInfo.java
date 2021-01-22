@@ -1,17 +1,27 @@
 package com.kuruma.kurumarket;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class PostInfo {
+public class PostInfo implements Serializable {
 
     private String title;
     private ArrayList<String> contents;
     private String publisher;
     private Date createdAt;
+    private String id;
 
 
-    public PostInfo(String title, ArrayList<String> contents, String publisher, Date createdAt){
+    public PostInfo(String title, ArrayList<String> contents, String publisher, Date createdAt, String id) {
+        this.title = title;
+        this.contents = contents;
+        this.publisher = publisher;
+        this.createdAt = createdAt;
+        this.id = id;
+    }
+
+    public PostInfo(String title, ArrayList<String> contents, String publisher, Date createdAt) {
         this.title = title;
         this.contents = contents;
         this.publisher = publisher;
@@ -49,6 +59,10 @@ public class PostInfo {
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
+
+    public String getId() { return id; }
+
+    public void setId(String id) { this.id = id; }
 }
 
 
