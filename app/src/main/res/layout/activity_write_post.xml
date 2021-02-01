@@ -5,9 +5,16 @@
     android:layout_height="match_parent">
 
 
+    <include
+        layout="@layout/view_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar"
         android:orientation="vertical"
         android:padding="10dp">
 
@@ -39,16 +46,12 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical">
 
-                    <EditText
-                        android:id="@+id/et_board_contents"
+                    <include
+                        layout="@layout/view_contents_edit_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:ems="10"
-                        android:gravity="start|top"
-                        android:hint="내용"
-                        android:inputType="textMultiLine" />
+                        android:layout_margin="8dp" />
+
                 </LinearLayout>
 
             </LinearLayout>

@@ -4,16 +4,13 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.InputType;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -30,7 +27,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.kuruma.kurumarket.R;
 import com.kuruma.kurumarket.PostInfo;
-import com.kuruma.kurumarket.Util;
+import com.kuruma.kurumarket.view.ContentsItemView;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -38,6 +35,14 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
+
+import static com.kuruma.kurumarket.Util.GALLERY_IMAGE;
+import static com.kuruma.kurumarket.Util.GALLERY_VIDEO;
+import static com.kuruma.kurumarket.Util.INTENT_MEDIA;
+import static com.kuruma.kurumarket.Util.INTENT_PATH;
+import static com.kuruma.kurumarket.Util.isStorageUri;
+import static com.kuruma.kurumarket.Util.showToast;
+import static com.kuruma.kurumarket.Util.storageUriToName;
 
 public class WritePostActivity extends BasicActivity {
 
@@ -54,13 +59,13 @@ public class WritePostActivity extends BasicActivity {
     private EditText et_board_contents;
     private EditText et_board_title;
     private PostInfo postInfo;
-    private com.kuruma.kurumarket.Util util;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_write_post);
+        setToolbarTitle("게시글 작성");
 
         parent = findViewById(R.id.contentsLayout);
         buttonsBackgroundLayout = findViewById(R.id.buttonsBackgroundLayout);
@@ -88,7 +93,6 @@ public class WritePostActivity extends BasicActivity {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
 
-        util = new Util(this);
         postInfo = (PostInfo) getIntent().getSerializableExtra("postInfo");
         postInit();
     }
@@ -100,63 +104,41 @@ public class WritePostActivity extends BasicActivity {
 
             case 0: {
                 if (resultCode == Activity.RESULT_OK) {
-                    String profilePath = data.getStringExtra("profilePath");
-                    pathList.add(profilePath);
+                    String path = data.getStringExtra(INTENT_PATH);
+                    pathList.add(path);
 
-                    //ViewGroup생성 및 레이아웃 세부 설정
-                    ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                            ViewGroup.LayoutParams.WRAP_CONTENT);
-
-                    LinearLayout linearLayout = new LinearLayout(WritePostActivity.this);
-                    linearLayout.setLayoutParams(layoutParams);
-                    linearLayout.setOrientation(LinearLayout.VERTICAL);
+                    ContentsItemView contentsItemView = new ContentsItemView(this);
 
                     if (selectedEditText == null) {
-                        parent.addView(linearLayout);
+                        parent.addView(contentsItemView);
                     } else {
                         for (int i = 0; i < parent.getChildCount(); i++) {
                             if (parent.getChildAt(i) == selectedEditText.getParent()) {
                                 //현재 셀렉트 에딧텍스트 다음에 리니어레이아웃을 생성
-                                parent.addView(linearLayout, i + 1);
+                                parent.addView(contentsItemView, i + 1);
                                 break;
                             }
                         }
-
                     }
-                    ImageView imageView = new ImageView(WritePostActivity.this);
-                    //Layout Param 이미지 뷰에
-                    imageView.setLayoutParams(layoutParams);
-                    //image크기 조정
-                    imageView.setAdjustViewBounds(true);
-                    imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-                    imageView.setOnClickListener(new View.OnClickListener() {
+
+                    contentsItemView.setImage(path);
+                    contentsItemView.setOnclickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             buttonsBackgroundLayout.setVisibility(View.VISIBLE);
                             selectedImageView = (ImageView) v;
                         }
                     });
-                    Glide.with(this).load(profilePath).override(1000).into(imageView);
-                    //parent에 imageview를 넣어줘야 함.
-                    linearLayout.addView(imageView);
-
-                    //EditText 생성
-                    EditText editText = new EditText(WritePostActivity.this);
-                    editText.setLayoutParams(layoutParams);
-                    editText.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE | InputType.TYPE_CLASS_TEXT);
-                    editText.setHint("내용");
-                    //Focus 위치를 기반으로 리니어 레이아웃을 생성한다.
-                    editText.setOnFocusChangeListener(onFocusChangeListener);
-                    linearLayout.addView(editText);
+                    contentsItemView.setOnFocusChangeListener(onFocusChangeListener);
                 }
                 break;
             }
 
             case 1:
                 if (resultCode == Activity.RESULT_OK) {
-                    String profilePath = data.getStringExtra("profilePath");
-                    pathList.set(parent.indexOfChild((View) selectedImageView.getParent()) - 1, profilePath);
-                    Glide.with(this).load(profilePath).override(1000).into(selectedImageView);
+                    String path = data.getStringExtra(INTENT_PATH);
+                    pathList.set(parent.indexOfChild((View) selectedImageView.getParent()) - 1, path);
+                    Glide.with(this).load(path).override(1000).into(selectedImageView);
 
                 }
                 break;
@@ -182,10 +164,10 @@ public class WritePostActivity extends BasicActivity {
                     storageUpload();
                     break;
                 case R.id.btn_board_image:
-                    myStartActivity(GalleryActivity.class, "image", 0);
+                    myStartActivity(GalleryActivity.class, GALLERY_IMAGE, 0);
                     break;
                 case R.id.btn_board_video:
-                    myStartActivity(GalleryActivity.class, "video", 0);
+                    myStartActivity(GalleryActivity.class, GALLERY_VIDEO, 0);
                     break;
                 case R.id.buttonsBackgroundLayout:
                     if (buttonsBackgroundLayout.getVisibility() == View.VISIBLE) {
@@ -193,38 +175,34 @@ public class WritePostActivity extends BasicActivity {
                     }
                     break;
                 case R.id.btn_image_modify:
-                    myStartActivity(GalleryActivity.class, "image", 1);
+                    myStartActivity(GalleryActivity.class, GALLERY_IMAGE, 1);
                     buttonsBackgroundLayout.setVisibility(View.GONE);
                     break;
                 case R.id.btn_video_modify:
-                    myStartActivity(GalleryActivity.class, "video", 1);
+                    myStartActivity(GalleryActivity.class, GALLERY_VIDEO, 1);
                     buttonsBackgroundLayout.setVisibility(View.GONE);
                     break;
                 case R.id.btn_contents_delete:
-                    View selectedView = (View) selectedImageView.getParent();
-
-                    String[] list = pathList.get(parent.indexOfChild(selectedView) - 1).split("\\?");
-                    String[] list2 = list[0].split("posts");
-                    String name = list2[list2.length-1].replace("%2F","/");
-                    StorageReference desertRef = storageRef.child("posts"+name);
-                    Log.e("로그 :", "이름 :" + name);
+                    final View selectedView = (View) selectedImageView.getParent();
+                    StorageReference desertRef = storageRef.child("posts"+storageUriToName(pathList.get(parent.indexOfChild(selectedView) - 1)));
+                    Log.e("로그 :", "이름 :" + storageUriToName(pathList.get(parent.indexOfChild(selectedView) - 1)));
 
                     desertRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
                             // File deleted successfully
-                            util.showToast("파일을 삭제하였습니다.");
+                            showToast(WritePostActivity.this,"파일을 삭제하였습니다.");
+                            pathList.remove(parent.indexOfChild(selectedView) - 1);
+                            parent.removeView(selectedView);
+                            buttonsBackgroundLayout.setVisibility(View.GONE);
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception exception) {
                             // Uh-oh, an error occurred!
-                            util.showToast("파일을 삭제하는데 실패하였습니다.");
+                            showToast(WritePostActivity.this,"파일을 삭제하는데 실패하였습니다.");
                         }
                     });
-                    pathList.remove(parent.indexOfChild(selectedView) - 1);
-                    parent.removeView(selectedView);
-                    buttonsBackgroundLayout.setVisibility(View.GONE);
                     break;
             }
         }
@@ -243,6 +221,7 @@ public class WritePostActivity extends BasicActivity {
             FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
             DocumentReference dr;
 
+
             final DocumentReference documentReference = postInfo == null ? firebaseFirestore.collection("posts").document() : firebaseFirestore.collection("posts").document(postInfo.getId());
             final Date date = postInfo == null ? new Date() : postInfo.getCreatedAt();
 
@@ -255,10 +234,12 @@ public class WritePostActivity extends BasicActivity {
                         if (text.length() > 0) {
                             contentList.add(text);
                         }
-                    } else if(!Patterns.WEB_URL.matcher(pathList.get(pathCount)).matches()){
+                    } else if(!isStorageUri(pathList.get(pathCount))){
                         String path = pathList.get(pathCount);
                         successCount++;
                         contentList.add(path);
+                        // ** 수정이 필요함 내용 수정시 오류
+
                         String[] pathArray = path.split("\\.");
                         final StorageReference mountainImagesRef = storageRef.child("posts/" + documentReference.getId() + "/" + pathCount + "." + pathArray[pathArray.length - 1]);
                         try {
@@ -301,19 +282,23 @@ public class WritePostActivity extends BasicActivity {
             }
 
         } else {
-            startToast("제목을 입력해주세요.");
+            showToast(WritePostActivity.this,"제목을 입력해주세요.");
         }
 
     }
 
-    private void storeUpload(DocumentReference documentReference, PostInfo postInfo) {
+    private void storeUpload(DocumentReference documentReference, final PostInfo postInfo) {
 
-        documentReference.set(postInfo)
+        documentReference.set(postInfo.getPostInfo())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG, "DocumentSnapshot successfully written!");
                         loaderLayout.setVisibility(View.GONE);
+                        Intent resultIntent = new Intent();
+                        resultIntent.putExtra("postInfo", postInfo);
+                        setResult(Activity.RESULT_OK, resultIntent);
+                        Log.e("로그", "로그 수정!");
                         finish();
                     }
                 })
@@ -333,48 +318,35 @@ public class WritePostActivity extends BasicActivity {
 
             for (int i = 0; i < contentsList.size(); i++) {
                 String contents = contentsList.get(i);
-                if (Patterns.WEB_URL.matcher(contents).matches() && contents.contains("https://firebasestorage.googleapis.com/v0/b/kurumarket-f4a15.appspot.com/o/posts")) {
+                if (isStorageUri(contents)) {
                     pathList.add(contents);
-                    //ViewGroup생성 및 레이아웃 세부 설정
-                    ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                            ViewGroup.LayoutParams.WRAP_CONTENT);
 
-                    LinearLayout linearLayout = new LinearLayout(WritePostActivity.this);
-                    linearLayout.setLayoutParams(layoutParams);
-                    linearLayout.setOrientation(LinearLayout.VERTICAL);
-                    parent.addView(linearLayout);
+                    ContentsItemView contentsItemView = new ContentsItemView(this);
 
-                    ImageView imageView = new ImageView(WritePostActivity.this);
-                    //Layout Param 이미지 뷰에
-                    imageView.setLayoutParams(layoutParams);
-                    //image크기 조정
-                    imageView.setAdjustViewBounds(true);
-                    imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-                    imageView.setOnClickListener(new View.OnClickListener() {
+                    parent.addView(contentsItemView);
+
+                    contentsItemView.setImage(contents);
+                    contentsItemView.setOnclickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             buttonsBackgroundLayout.setVisibility(View.VISIBLE);
                             selectedImageView = (ImageView) v;
                         }
                     });
-                    Glide.with(this).load(contents).override(1000).into(imageView);
-                    //parent에 imageview를 넣어줘야 함.
-                    linearLayout.addView(imageView);
+                    contentsItemView.setOnFocusChangeListener(onFocusChangeListener);
 
-                    //EditText 생성
-                    EditText editText = new EditText(WritePostActivity.this);
-                    editText.setLayoutParams(layoutParams);
-                    editText.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE | InputType.TYPE_CLASS_TEXT);
-                    editText.setHint("내용");
                     if (i < contentsList.size() - 1) {
                         String nextContents = contentsList.get(i + 1);
-                        if (Patterns.WEB_URL.matcher(nextContents).matches() || nextContents.contains("https://firebasestorage.googleapis.com/v0/b/kurumarket-f4a15.appspot.com/o/posts")) {
-                            editText.setText(nextContents);
+
+//                        if (!Patterns.WEB_URL.matcher(nextContents).matches() || !nextContents.contains("https://firebasestorage.googleapis.com/v0/b/kurumarket-f4a15.appspot.com/o/posts")) {
+//                            contentsItemView.setText(nextContents);
+//                        }
+//                         조건이 틀림 || 가 && 으로 바뀜
+                        if (!isStorageUri(nextContents)) {
+                            contentsItemView.setText(nextContents);
                         }
                     }
-                    //Focus 위치를 기반으로 리니어 레이아웃을 생성한다.
-                    editText.setOnFocusChangeListener(onFocusChangeListener);
-                    linearLayout.addView(editText);
+
                 } else if (i == 0) {
                     et_board_contents.setText(contents);
                 }
@@ -383,14 +355,10 @@ public class WritePostActivity extends BasicActivity {
     }
 
 
-    private void startToast(String msg) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-    }
 
-
-    private void myStartActivity(Class c, String media, int requestCode) {
+    private void myStartActivity(Class c, int media, int requestCode) {
         Intent intent = new Intent(this, c);
-        intent.putExtra("media", media);
+        intent.putExtra(INTENT_MEDIA, media);
         startActivityForResult(intent, requestCode);
     }
 

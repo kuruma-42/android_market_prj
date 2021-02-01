@@ -8,21 +8,22 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.kuruma.kurumarket.R;
 import com.kuruma.kurumarket.adapter.GalleryAdapter;
 
 import java.util.ArrayList;
+
+import static com.kuruma.kurumarket.Util.GALLERY_IMAGE;
+import static com.kuruma.kurumarket.Util.GALLERY_VIDEO;
+import static com.kuruma.kurumarket.Util.INTENT_MEDIA;
+import static com.kuruma.kurumarket.Util.showToast;
 
 
 public class GalleryActivity extends BasicActivity {
@@ -31,6 +32,7 @@ public class GalleryActivity extends BasicActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery);
+        setToolbarTitle("갤러리");
 
 
         if (ContextCompat.checkSelfPermission(GalleryActivity.this,
@@ -42,7 +44,7 @@ public class GalleryActivity extends BasicActivity {
             if (ActivityCompat.shouldShowRequestPermissionRationale(GalleryActivity.this,
                     Manifest.permission.READ_EXTERNAL_STORAGE)) {
             } else {
-                startToast("권한을 허용해 주세요");
+                showToast(GalleryActivity.this,getResources().getString(R.string.please_grant_permission));
             }
         }else{
             recyclerInit();
@@ -59,7 +61,7 @@ public class GalleryActivity extends BasicActivity {
                     recyclerInit();
                 } else {
                     finish();
-                    startToast("권한을 허용해 주세요");
+                    showToast(GalleryActivity.this,getResources().getString(R.string.please_grant_permission));
                 }
             }
         }
@@ -87,7 +89,9 @@ public class GalleryActivity extends BasicActivity {
 
         //Intent putExtra, getExtra 활용 (인텐트로 다른 페이지를 호출하면서 구분할 수 있는 표식을 남긴다.
         Intent intent = getIntent();
-        if (intent.getStringExtra("media").equals("video")) {
+        //초기값을 넣어주면 인텐트 값을 안 보냈을 때도 Null Exception이 없음.
+        final int media = intent.getIntExtra(INTENT_MEDIA, GALLERY_IMAGE);
+        if (media == GALLERY_VIDEO) {
             //Return Video List
             uri = android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
             projection = new String[]{MediaStore.MediaColumns.DATA, MediaStore.Video.Media.BUCKET_DISPLAY_NAME};
@@ -109,7 +113,4 @@ public class GalleryActivity extends BasicActivity {
         return listOfAllImages;
     }
 
-    private void startToast(String msg){
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-    }
 }

@@ -3,6 +3,8 @@ package com.kuruma.kurumarket;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class PostInfo implements Serializable {
 
@@ -26,6 +28,15 @@ public class PostInfo implements Serializable {
         this.contents = contents;
         this.publisher = publisher;
         this.createdAt = createdAt;
+    }
+
+    public Map<String, Object> getPostInfo(){
+        Map<String, Object> docData = new HashMap<>();
+        docData.put("title",title);
+        docData.put("contents",contents);
+        docData.put("publisher",publisher);
+        docData.put("createdAt",createdAt);
+        return docData;
     }
 
     public String getTitle() {

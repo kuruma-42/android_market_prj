@@ -18,6 +18,8 @@ import com.kuruma.kurumarket.R;
 
 import java.util.ArrayList;
 
+import static com.kuruma.kurumarket.Util.INTENT_PATH;
+
 public class GalleryAdapter  extends RecyclerView.Adapter<GalleryAdapter.GalleryViewHolder> {
     private ArrayList<String> mDataset;
     private Activity activity;
@@ -46,7 +48,7 @@ public class GalleryAdapter  extends RecyclerView.Adapter<GalleryAdapter.Gallery
             @Override
             public void onClick(View v) {
                 Intent resultIntent = new Intent();
-                resultIntent.putExtra("profilePath", mDataset.get(galleryViewHolder.getAdapterPosition()));
+                resultIntent.putExtra(INTENT_PATH, mDataset.get(galleryViewHolder.getAdapterPosition()));
                 activity.setResult(Activity.RESULT_OK, resultIntent);
                 activity.finish();
             }

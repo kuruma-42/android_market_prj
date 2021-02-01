@@ -1,11 +1,7 @@
 package com.kuruma.kurumarket.activity;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,13 +10,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.Continuation;
@@ -41,6 +32,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+
+import static com.kuruma.kurumarket.Util.INTENT_PATH;
+import static com.kuruma.kurumarket.Util.showToast;
 
 public class MemberInitActivity extends BasicActivity {
 
@@ -63,6 +57,7 @@ public class MemberInitActivity extends BasicActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_member_init);
+        setToolbarTitle("회원정보");
 
 
         loaderLayout = findViewById(R.id.loaderLayout);
@@ -117,8 +112,6 @@ public class MemberInitActivity extends BasicActivity {
                             constraintLayout.setVisibility(View.VISIBLE);
                         }
                         break;
-
-
                 }
             }
         });
@@ -148,7 +141,7 @@ public class MemberInitActivity extends BasicActivity {
 
             case 0 :{
                 if(resultCode == Activity.RESULT_OK){
-                    profilePath= data.getStringExtra("profilePath");
+                    profilePath= data.getStringExtra(INTENT_PATH);
                     Glide.with(this).load(profilePath).centerCrop().override(500).into(iv_profile);
                 }
                 break;
@@ -200,7 +193,7 @@ public class MemberInitActivity extends BasicActivity {
 
                             } else {
                                 Log.e("로그", "실패");
-                                startToast("회원정보를 보내는데 실패하였습니다.");
+                                showToast(MemberInitActivity.this,"회원정보를 보내는데 실패하였습니다.");
                             }
                         }
                     });
@@ -209,7 +202,7 @@ public class MemberInitActivity extends BasicActivity {
                 }
             }
         }else{
-            startToast("회원정보를 입력해주세요.");
+            showToast(MemberInitActivity.this,"회원정보를 입력해주세요.");
         }
 
     }
@@ -221,7 +214,7 @@ public class MemberInitActivity extends BasicActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        startToast("회원정보 등록을 성공하였습니다.");
+                        showToast(MemberInitActivity.this,"회원정보 등록을 성공하였습니다.");
                         loaderLayout.setVisibility(View.GONE);
                         finish();
                     }
@@ -229,7 +222,7 @@ public class MemberInitActivity extends BasicActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        startToast("회원정보 등록에 실패하였습니다.");
+                        showToast(MemberInitActivity.this,"회원정보 등록에 실패하였습니다.");
                         loaderLayout.setVisibility(View.GONE);
                         Log.w(TAG, "Error writing document", e);
                     }
@@ -242,9 +235,6 @@ public class MemberInitActivity extends BasicActivity {
         startActivityForResult(intent, 0);
     }
 
-    private void startToast(String msg){
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-    }
 
     @Override
     public void onBackPressed(){

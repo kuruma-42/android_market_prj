@@ -23,7 +23,6 @@ import android.media.ImageReader;
 import android.os.Bundle;
 import android.util.Log;
 
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.kuruma.kurumarket.R;
 import com.kuruma.kurumarket.fragment.Camera2BasicFragment;
@@ -34,6 +33,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 
 import static android.media.ImageReader.*;
+import static com.kuruma.kurumarket.Util.INTENT_PATH;
 
 public class CameraActivity extends BasicActivity {
 
@@ -47,8 +47,6 @@ public class CameraActivity extends BasicActivity {
 
         @Override
         public void onImageAvailable(ImageReader reader) {
-//            mBackgroundHandler.post(new Camera2BasicFragment.ImageUpLoader(reader.acquireNextImage()));
-            Log.e("로그","캡처");
 
 
             Image mImage = reader.acquireNextImage();
@@ -73,9 +71,9 @@ public class CameraActivity extends BasicActivity {
                     }
                 }
             }
-            Intent resultIntent = new Intent();
-            resultIntent.putExtra("profilePath", mFile.toString());
-            setResult(Activity.RESULT_OK, resultIntent);
+            Intent intent = new Intent();
+            intent.putExtra(INTENT_PATH, mFile.toString());
+            setResult(Activity.RESULT_OK, intent);
 
             camera2BasicFragment.closeCamera();
             finish();
@@ -86,6 +84,7 @@ public class CameraActivity extends BasicActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
+        setToolbarTitle(getResources().getString(R.string.app_name));
         if (null == savedInstanceState) {
             camera2BasicFragment = new Camera2BasicFragment();
             camera2BasicFragment.setOnImageAvailableListener(mOnImageAvailableListener);

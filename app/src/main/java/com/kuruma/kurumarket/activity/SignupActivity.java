@@ -1,7 +1,6 @@
 package com.kuruma.kurumarket.activity;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -43,6 +42,7 @@ public class SignupActivity extends BasicActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
+        setToolbarTitle("회원가입");
 
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();

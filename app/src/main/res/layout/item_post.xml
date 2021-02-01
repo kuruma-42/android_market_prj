@@ -11,9 +11,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:gravity="center_vertical"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="10dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -48,6 +47,7 @@
 
         </LinearLayout>
 
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -55,22 +55,15 @@
             android:layout_marginBottom="5dp"
             android:background="#C6E8E8E8" />
 
-        <LinearLayout
-            android:id="@+id/contentsLayout"
+
+        <com.kuruma.kurumarket.view.ReadContentsView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:id="@+id/readContentsView">
 
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/tv_createdAt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="right"
-            android:text="TextView"
-            tools:text="2019-04-25" />
+        </com.kuruma.kurumarket.view.ReadContentsView>
 
     </LinearLayout>
+
 
 </androidx.cardview.widget.CardView>

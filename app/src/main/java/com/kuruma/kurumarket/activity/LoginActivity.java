@@ -1,7 +1,6 @@
 package com.kuruma.kurumarket.activity;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,7 +9,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -18,6 +16,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.kuruma.kurumarket.R;
+
+import static com.kuruma.kurumarket.Util.showToast;
 
 public class LoginActivity extends BasicActivity {
 
@@ -34,6 +34,7 @@ public class LoginActivity extends BasicActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        setToolbarTitle("로그인");
 
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
@@ -50,7 +51,7 @@ public class LoginActivity extends BasicActivity {
                 if(et_loginid.getText().toString().length() > 0 && et_loginpw.getText().toString().length() > 0){
                     startLogin();
                 }else{
-                    startToast("이메일 혹은 비밀번호를 입력하세요.");
+                    showToast(LoginActivity.this,"이메일 혹은 비밀번호를 입력하세요.");
                     return;
                 }
             }
@@ -81,7 +82,7 @@ public class LoginActivity extends BasicActivity {
                                 // Sign in success, update UI with the signed-in user's information
                                 Log.d(TAG, "signInWithEmail:success");
                                 FirebaseUser user = mAuth.getCurrentUser();
-                                startToast("로그인에 성공하였습니다.");
+                                showToast(LoginActivity.this,"로그인에 성공하였습니다.");
                                 myStartActivity(WelcomeActivity.class);
 
 
@@ -90,8 +91,7 @@ public class LoginActivity extends BasicActivity {
                                 loaderLayout.setVisibility(View.GONE);
                                 // If sign in fails, display a message to the user.
                                 Log.w(TAG, "signInWithEmail:failure", task.getException());
-                                Toast.makeText(LoginActivity.this, "Authentication failed.",
-                                        Toast.LENGTH_SHORT).show();
+                                showToast(LoginActivity.this,"로그인에 실패하였습니다.");
                                 // ...
                             }
 
@@ -108,6 +108,5 @@ public class LoginActivity extends BasicActivity {
         startActivity(intent);
     }
 
-    private void startToast(String msg){ Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();}
 
 }
