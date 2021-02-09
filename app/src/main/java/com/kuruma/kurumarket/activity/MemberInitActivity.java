@@ -25,7 +25,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.kuruma.kurumarket.MemberInfo;
+import com.kuruma.kurumarket.UserInfo;
 import com.kuruma.kurumarket.R;
 
 import java.io.File;
@@ -56,7 +56,7 @@ public class MemberInitActivity extends BasicActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_member_init);
+        setContentView(R.layout.activity_user_init);
         setToolbarTitle("회원정보");
 
 
@@ -166,8 +166,8 @@ public class MemberInitActivity extends BasicActivity {
             final StorageReference mountainImagesRef = storageRef.child("users/" +user.getUid() + "/profileimage.jpg");
 
             if(profilePath == null){
-                MemberInfo memberInfo = new MemberInfo(name, phone, birthdate, address);
-                storeUploader(memberInfo);
+                UserInfo userInfo = new UserInfo(name, phone, birthdate, address);
+                storeUploader(userInfo);
             } else{
                 try{
                     InputStream stream = new FileInputStream(new File(profilePath));
@@ -188,8 +188,8 @@ public class MemberInitActivity extends BasicActivity {
                             if (task.isSuccessful()) {
                                 Uri downloadUri = task.getResult();
 
-                                MemberInfo memberInfo = new MemberInfo(name, phone, birthdate, address, downloadUri.toString());
-                                storeUploader(memberInfo);
+                                UserInfo userInfo = new UserInfo(name, phone, birthdate, address, downloadUri.toString());
+                                storeUploader(userInfo);
 
                             } else {
                                 Log.e("로그", "실패");
@@ -207,10 +207,10 @@ public class MemberInitActivity extends BasicActivity {
 
     }
 
-    private void storeUploader(MemberInfo memberInfo){
+    private void storeUploader(UserInfo userInfo){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        db.collection("users").document(user.getUid()).set(memberInfo)
+        db.collection("users").document(user.getUid()).set(userInfo)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {

@@ -6,19 +6,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.bumptech.glide.Glide;
 import com.kuruma.kurumarket.FireBaseHelper;
 import com.kuruma.kurumarket.PostInfo;
 import com.kuruma.kurumarket.R;
 import com.kuruma.kurumarket.listener.OnPostListener;
-import com.kuruma.kurumarket.view.ContentsItemView;
 import com.kuruma.kurumarket.view.ReadContentsView;
-
-import static com.kuruma.kurumarket.Util.INTENT_PATH;
 
 public class PostActivity extends BasicActivity{
     private PostInfo postInfo;
@@ -71,6 +65,7 @@ public class PostActivity extends BasicActivity{
         switch (item.getItemId()) {
             case R.id.dropdown_menu_delete:
                 fireBaseHelper.storageDelete(postInfo);
+                myStartActivity(WelcomeActivity.class, postInfo);
                 return true;
 
             case R.id.dropdown_menu_modify:
@@ -85,7 +80,7 @@ public class PostActivity extends BasicActivity{
 
     OnPostListener onPostListener = new OnPostListener() {
         @Override
-        public void onDelete() {
+        public void onDelete(PostInfo postInfo) {
             Log.e("로그", "삭제 성공");
         }
 

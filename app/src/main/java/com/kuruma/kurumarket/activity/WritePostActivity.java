@@ -40,7 +40,9 @@ import static com.kuruma.kurumarket.Util.GALLERY_IMAGE;
 import static com.kuruma.kurumarket.Util.GALLERY_VIDEO;
 import static com.kuruma.kurumarket.Util.INTENT_MEDIA;
 import static com.kuruma.kurumarket.Util.INTENT_PATH;
+import static com.kuruma.kurumarket.Util.isImageFile;
 import static com.kuruma.kurumarket.Util.isStorageUri;
+import static com.kuruma.kurumarket.Util.isVideoFile;
 import static com.kuruma.kurumarket.Util.showToast;
 import static com.kuruma.kurumarket.Util.storageUriToName;
 
@@ -184,25 +186,32 @@ public class WritePostActivity extends BasicActivity {
                     break;
                 case R.id.btn_contents_delete:
                     final View selectedView = (View) selectedImageView.getParent();
-                    StorageReference desertRef = storageRef.child("posts"+storageUriToName(pathList.get(parent.indexOfChild(selectedView) - 1)));
-                    Log.e("로그 :", "이름 :" + storageUriToName(pathList.get(parent.indexOfChild(selectedView) - 1)));
+                    String path = pathList.get(parent.indexOfChild(selectedView)-1);
+                    if(isStorageUri(path)){
+                        StorageReference desertRef = storageRef.child("posts"+storageUriToName(path));
+                        Log.e("로그 :", "이름 :" + storageUriToName(pathList.get(parent.indexOfChild(selectedView) - 1)));
 
-                    desertRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            // File deleted successfully
-                            showToast(WritePostActivity.this,"파일을 삭제하였습니다.");
-                            pathList.remove(parent.indexOfChild(selectedView) - 1);
-                            parent.removeView(selectedView);
-                            buttonsBackgroundLayout.setVisibility(View.GONE);
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) {
-                            // Uh-oh, an error occurred!
-                            showToast(WritePostActivity.this,"파일을 삭제하는데 실패하였습니다.");
-                        }
-                    });
+                        desertRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                // File deleted successfully
+                                showToast(WritePostActivity.this,"파일을 삭제하였습니다.");
+                                pathList.remove(parent.indexOfChild(selectedView) - 1);
+                                parent.removeView(selectedView);
+                                buttonsBackgroundLayout.setVisibility(View.GONE);
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {
+                                // Uh-oh, an error occurred!
+                                showToast(WritePostActivity.this,"파일을 삭제하는데 실패하였습니다.");
+                            }
+                        });
+                    }else{
+                        pathList.remove(parent.indexOfChild(selectedView) - 1);
+                        parent.removeView(selectedView);
+                        buttonsBackgroundLayout.setVisibility(View.GONE);
+                    }
                     break;
             }
         }
@@ -214,7 +223,8 @@ public class WritePostActivity extends BasicActivity {
         final String title = ((EditText) findViewById(R.id.et_board_title)).getText().toString();
         if (title.length() > 0) {
             loaderLayout.setVisibility(View.VISIBLE);
-            ArrayList<String> contentList = new ArrayList<>();
+            final ArrayList<String> contentList = new ArrayList<>();
+            final ArrayList<String> formatList = new ArrayList<>();
             user = FirebaseAuth.getInstance().getCurrentUser();
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageRef = storage.getReference();
@@ -233,12 +243,20 @@ public class WritePostActivity extends BasicActivity {
                         String text = ((EditText) view).getText().toString();
                         if (text.length() > 0) {
                             contentList.add(text);
+                            formatList.add("text");
                         }
-                    } else if(!isStorageUri(pathList.get(pathCount))){
+                    } else if(!isStorageUri(pathList.get(pathCount))) {
                         String path = pathList.get(pathCount);
                         successCount++;
                         contentList.add(path);
-                        // ** 수정이 필요함 내용 수정시 오류
+
+                        if (isImageFile(path)) {
+                            formatList.add("image");
+                        } else if (isVideoFile(path)) {
+                            formatList.add("video");
+                        } else {
+                            formatList.add("text");
+                        }
 
                         String[] pathArray = path.split("\\.");
                         final StorageReference mountainImagesRef = storageRef.child("posts/" + documentReference.getId() + "/" + pathCount + "." + pathArray[pathArray.length - 1]);
@@ -262,7 +280,7 @@ public class WritePostActivity extends BasicActivity {
                                             contentList.set(index, uri.toString());
                                             if (successCount == 0) ;
                                             {
-                                                PostInfo postInfo = new PostInfo(title, contentList, user.getUid(), date);
+                                                PostInfo postInfo = new PostInfo(title, contentList, formatList, user.getUid(), date);
                                                 storeUpload(documentReference, postInfo);
                                             }
                                         }
@@ -273,12 +291,29 @@ public class WritePostActivity extends BasicActivity {
                             Log.e("로그", "에러" + e.toString());
                         }
                         pathCount++;
+
+                    } else if (isStorageUri(pathList.get(pathCount))) {
+                        String path = pathList.get(pathCount);
+                        contentList.add(path);
+
+                        String[] okFileExtensions =  new String[] {"jpg", "png", "gif","jpeg"};
+                        for(int j = 0; j < okFileExtensions.length; j++){
+                            if(path.contains(okFileExtensions[j])){
+                                formatList.add("image");
+                                break;
+                            }
+                            if(j == okFileExtensions.length - 1){
+                                formatList.add("video");
+                            }
+                        }
+                        pathCount++;
                     }
+
                 }
 
             }
             if (successCount == 0) {
-                storeUpload(documentReference, new PostInfo(title, contentList, user.getUid(), date));
+                storeUpload(documentReference, new PostInfo(title, contentList, formatList, user.getUid(), date));
             }
 
         } else {

@@ -15,7 +15,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/fox_main" />
+        app:srcCompat="@drawable/splash_fox2" />
 
     <TextView
         android:id="@+id/tv_title"
@@ -37,10 +37,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
         android:layout_marginBottom="32dp"
         android:background="#448AFF"
         android:text="로그인"
@@ -56,12 +54,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
         android:layout_marginBottom="32dp"
-        android:background="#92FF40C9"
+        android:background="#448AFF"
         android:text="회원가입"
         android:textColor="#FFFFFF"
         android:textStyle="bold"

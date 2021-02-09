@@ -1,6 +1,6 @@
 package com.kuruma.kurumarket;
 
-public class MemberInfo {
+public class UserInfo {
 
     private String name;
     private String phone;
@@ -8,7 +8,7 @@ public class MemberInfo {
     private String address;
     private String photoUrl;
 
-    public MemberInfo(String name, String phone, String birthdate, String address, String photoUrl){
+    public UserInfo(String name, String phone, String birthdate, String address, String photoUrl){
         this.name = name;
         this.phone = phone;
         this.birthdate = birthdate;
@@ -16,7 +16,7 @@ public class MemberInfo {
         this.photoUrl = photoUrl;
     }
 
-    public MemberInfo(String name, String phone, String birthdate, String address){
+    public UserInfo(String name, String phone, String birthdate, String address){
         this.name = name;
         this.phone = phone;
         this.birthdate = birthdate;

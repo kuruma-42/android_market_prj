@@ -2,6 +2,7 @@ package com.kuruma.kurumarket.view;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -12,8 +13,19 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
+import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.ProgressiveMediaSource;
+import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.exoplayer2.upstream.DataSource;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.util.Util;
+import com.google.android.exoplayer2.video.VideoListener;
 import com.kuruma.kurumarket.PostInfo;
 import com.kuruma.kurumarket.R;
+
+import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -23,6 +35,8 @@ import static com.kuruma.kurumarket.Util.isStorageUri;
 
 public class ReadContentsView extends LinearLayout {
     private Context context;
+    private LayoutInflater layoutInflater;
+    private ArrayList<SimpleExoPlayer> playerArrayList = new ArrayList<>();
     private int moreIndex = -1;
 
     public ReadContentsView(Context context) {
@@ -41,11 +55,10 @@ public class ReadContentsView extends LinearLayout {
         setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         setOrientation(LinearLayout.VERTICAL);
 
-        LayoutInflater layoutInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        layoutInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         //Merge를 사용했을 때는 아래의 코드를 쓴다.
         layoutInflater.inflate(R.layout.view_post, this, true);
 //        addView(layoutInflater.inflate(R.layout.view_post, this, false));
-
     }
 
     public void setMoreIndex(int moreIndex){
@@ -62,7 +75,7 @@ public class ReadContentsView extends LinearLayout {
         LinearLayout contentsLayout = findViewById(R.id.contentsLayout);
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         ArrayList<String> contentsList = postInfo.getContents();
-
+        ArrayList<String> formatList = postInfo.getFormats();
         for (int i = 0; i < contentsList.size(); i++) {
             if(i == moreIndex ){
                 //create textview
@@ -73,27 +86,48 @@ public class ReadContentsView extends LinearLayout {
                 break;
             }
             String contents = contentsList.get(i);
-            //check URL patterns in contents
-            //User가 게시글에 URL 패턴을 칠 수 도 있으니 && 조건을 추가한다.
-            if (isStorageUri(contents))
-            {
+            String formats = formatList.get(i);
+
+            if(formats.equals("image")){
                 //create imageView
-                ImageView imageView = new ImageView(context);
-                imageView.setLayoutParams(layoutParams);
-                //이미지 크기 맞추기
-                imageView.setAdjustViewBounds(true);
-                imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                ImageView imageView = (ImageView)layoutInflater.inflate(R.layout.view_content_image, this, false);
                 contentsLayout.addView(imageView);
                 Glide.with(this).load(contents).override(1000).thumbnail(0.1f).into(imageView);
-            } else {
+            }else if(formats.equals("video")){
+
+                final PlayerView playerView = (PlayerView) layoutInflater.inflate(R.layout.view_contents_player, this, false);
+
+                DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(context,
+                        Util.getUserAgent(context, getResources().getString(R.string.app_name)));
+                MediaSource videoSource = new ProgressiveMediaSource.Factory(dataSourceFactory)
+                        .createMediaSource(Uri.parse(contents));
+
+
+                SimpleExoPlayer player = ExoPlayerFactory.newSimpleInstance(context);;
+                player.prepare(videoSource);
+
+                player.addVideoListener(new VideoListener() {
+                    @Override
+                    public void onVideoSizeChanged(int width, int height, int unappliedRotationDegrees, float pixelWidthHeightRatio) {
+                        playerView.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height));
+                    }
+                });
+
+                playerArrayList.add(player);
+                playerView.setPlayer(player);
+                contentsLayout.addView(playerView);
+
+            }else{
                 //create textview
-                TextView textView = new TextView(context);
-                textView.setLayoutParams(layoutParams);
+                TextView textView = (TextView) layoutInflater.inflate(R.layout.view_contents_text, this, false);
                 textView.setText(contents);
-                textView.setTextColor(Color.rgb(0,0,0));
                 contentsLayout.addView(textView);
             }
         }
+    }
+
+    public ArrayList<SimpleExoPlayer> getPlayerArrayList() {
+        return playerArrayList;
     }
 }
 

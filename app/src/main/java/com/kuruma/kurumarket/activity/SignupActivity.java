@@ -18,7 +18,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.kuruma.kurumarket.MemberInfo;
+import com.kuruma.kurumarket.UserInfo;
 import com.kuruma.kurumarket.R;
 
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
 
 public class SignupActivity extends BasicActivity {
 
-    private ArrayList<MemberInfo> arrayList;
+    private ArrayList<UserInfo> arrayList;
     private DatabaseReference databaseReference; //파이어베이스 데이터베이스
     EditText et_email;
     EditText et_loginpassword;
@@ -53,7 +53,7 @@ public class SignupActivity extends BasicActivity {
         et_loginpassword = (EditText)findViewById(R.id.et_loginpw);
         et_loginpasswordcheck = (EditText)findViewById(R.id.et_loginpasswordcheck);
         btn_signup = (Button)findViewById(R.id.btn_send_email);
-        databaseReference = FirebaseDatabase.getInstance().getReference("MemberInfo"); // 파이어베이스 데이터베이스 연동
+        databaseReference = FirebaseDatabase.getInstance().getReference("UserInfo"); // 파이어베이스 데이터베이스 연동
         arrayList = new ArrayList<>(); // 판매목록을 담아주려는 빈 배열 리스트 생성
 
         btn_signup.setOnClickListener(new View.OnClickListener() {

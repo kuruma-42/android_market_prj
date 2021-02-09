@@ -33,7 +33,7 @@ public class FireBaseHelper {
         this.onPostListener = onPosterListener;
     }
 
-    public void storageDelete(PostInfo postInfo){
+    public void storageDelete(final PostInfo postInfo){
 
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
@@ -54,7 +54,7 @@ public class FireBaseHelper {
                         // File deleted successfully
                         showToast(activity, "게시글을 삭제하였습니다.");
                         successCount--;
-                        storeDelete(id);
+                        storeDelete(id, postInfo);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -65,10 +65,10 @@ public class FireBaseHelper {
                 });
             }
         }
-        storeDelete(id);
+        storeDelete(id, postInfo);
     }
 
-    private void storeDelete(String id) {
+    private void storeDelete(String id, final PostInfo postInfo) {
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
         if (successCount == 0) {
             firebaseFirestore.collection("posts").document(id)
@@ -78,7 +78,7 @@ public class FireBaseHelper {
                         public void onSuccess(Void aVoid) {
                             showToast(activity, "포스트 게시글을 삭제하였습니다.");
 //                            postUpdate();
-                            onPostListener.onDelete();
+                            onPostListener.onDelete(postInfo);
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {

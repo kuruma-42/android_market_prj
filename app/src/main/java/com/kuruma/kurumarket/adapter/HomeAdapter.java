@@ -2,24 +2,20 @@ package com.kuruma.kurumarket.adapter;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
+import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.kuruma.kurumarket.FireBaseHelper;
 import com.kuruma.kurumarket.PostInfo;
 import com.kuruma.kurumarket.R;
@@ -28,17 +24,14 @@ import com.kuruma.kurumarket.activity.WritePostActivity;
 import com.kuruma.kurumarket.listener.OnPostListener;
 import com.kuruma.kurumarket.view.ReadContentsView;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Locale;
 
-import static com.kuruma.kurumarket.Util.isStorageUri;
-
-public class WelcomeAdapter extends RecyclerView.Adapter<WelcomeAdapter.WelcomeViewHolder> {
+public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.WelcomeViewHolder> {
     private ArrayList<PostInfo> mDataset;
     private Activity activity;
-    private final int MORE_INDEX = 2;
+    private ArrayList<ArrayList<SimpleExoPlayer>> playerArrayListArrayList = new ArrayList<>();
     private FireBaseHelper fireBaseHelper;
+    private final int MORE_INDEX = 2;
 
 
 
@@ -52,7 +45,7 @@ public class WelcomeAdapter extends RecyclerView.Adapter<WelcomeAdapter.WelcomeV
         }
     }
 
-    public WelcomeAdapter(Activity activity, ArrayList<PostInfo> myDataset) {
+    public HomeAdapter(Activity activity, ArrayList<PostInfo> myDataset) {
         this.mDataset = myDataset;
         this.activity = activity;
         fireBaseHelper = new FireBaseHelper(activity);
@@ -69,7 +62,7 @@ public class WelcomeAdapter extends RecyclerView.Adapter<WelcomeAdapter.WelcomeV
 
     @NonNull
     @Override
-    public WelcomeAdapter.WelcomeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public HomeAdapter.WelcomeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         CardView cardView = (CardView) LayoutInflater.from(parent.getContext()).inflate(R.layout.item_post, parent, false);
         final WelcomeViewHolder welcomeViewHolder = new WelcomeViewHolder(cardView);
         cardView.setOnClickListener(new View.OnClickListener() {
@@ -112,6 +105,13 @@ public class WelcomeAdapter extends RecyclerView.Adapter<WelcomeAdapter.WelcomeV
 
             readContentsView.setMoreIndex(MORE_INDEX);
             readContentsView.setPostInfo(postInfo);
+
+            ArrayList<SimpleExoPlayer> playerArrayList = readContentsView.getPlayerArrayList();
+
+            if(playerArrayList != null){
+                playerArrayListArrayList.add(playerArrayList);
+            }
+
         }
     }
 
@@ -151,5 +151,17 @@ public class WelcomeAdapter extends RecyclerView.Adapter<WelcomeAdapter.WelcomeV
         Intent intent = new Intent(activity, c);
         intent.putExtra("postInfo", postInfo);
         activity.startActivity(intent);
+    }
+
+    public void playerStop(){
+        for(int i = 0; i<playerArrayListArrayList.size(); i++){
+            ArrayList<SimpleExoPlayer> playerArrayList = playerArrayListArrayList.get(i);
+            for(int ii = 0; ii < playerArrayList.size(); ii++){
+                SimpleExoPlayer player = playerArrayList.get(ii);
+                if(player.getPlayWhenReady()){
+                    player.setPlayWhenReady(false);
+                }
+            }
+        }
     }
 }
