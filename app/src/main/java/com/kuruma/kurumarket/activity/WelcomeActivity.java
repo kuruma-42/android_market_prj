@@ -33,11 +33,11 @@ public class WelcomeActivity extends BasicActivity {
         inIt();
     }
 
-//
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
 
     //화면이 멈추거나, 화면이 내려갔을 때 동작하는 리스너
     @Override

@@ -42,6 +42,7 @@ public class HomeFragment extends Fragment {
     private ArrayList<PostInfo> postList;
     private boolean updating;
     private boolean topScrolled;
+    private boolean firstScrolling;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -53,11 +54,6 @@ public class HomeFragment extends Fragment {
     }
 
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        postUpdate(true);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -134,7 +130,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        postUpdate(false);
+//        postUpdate(false);
 
         return view;
     }
@@ -147,12 +143,6 @@ public class HomeFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-    }
-
-    @Override
-    public void onPause(){
-        super.onPause();
-        homeAdapter.playerStop();
     }
 
     View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -173,11 +163,14 @@ public class HomeFragment extends Fragment {
             postList.remove(postInfo);
             homeAdapter.notifyDataSetChanged();
             Log.e("로그","삭제 성공");
+            postUpdate(true);
         }
 
         @Override
         public void onModify() {
             Log.e("로그","수정 성공");
+            homeAdapter.notifyDataSetChanged();
+            postUpdate(true);
         }
     };
 
@@ -215,6 +208,16 @@ public class HomeFragment extends Fragment {
                     }
                 });
     }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        postList.clear();
+        postUpdate(false);
+    }
+
+
 
 
     private void myStartActivity(Class c) {
