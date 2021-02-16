@@ -59,20 +59,20 @@
 
     <!-- Sample Admob Id ca-app-pub-3940256099942544/6300978111-->
     <!-- Release Admob Id ca-app-pub-6754052115866718/4998319854-->
-    <com.google.android.gms.ads.AdView
-        android:id="@+id/adbanner"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        app:adSize="BANNER"
-        app:adUnitId="ca-app-pub-3940256099942544/6300978111"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/const_vp"
-        app:layout_constraintVertical_bias="0.68"/>
+<!--    <com.google.android.gms.ads.AdView-->
+<!--        android:id="@+id/adbanner"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_alignParentBottom="true"-->
+<!--        android:layout_centerHorizontal="true"-->
+<!--        app:adSize="BANNER"-->
+<!--        app:adUnitId="ca-app-pub-3940256099942544/6300978111"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.498"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/const_vp"-->
+<!--        app:layout_constraintVertical_bias="0.68"/>-->
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

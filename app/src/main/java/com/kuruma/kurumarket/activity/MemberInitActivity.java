@@ -217,6 +217,7 @@ public class MemberInitActivity extends BasicActivity {
                         showToast(MemberInitActivity.this,"회원정보 등록을 성공하였습니다.");
                         loaderLayout.setVisibility(View.GONE);
                         finish();
+                        myStartActivity(WelcomeActivity.class);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
